@@ -62,6 +62,7 @@ public class FXGame {
      */
     public static int getDefaultRows() {
         return defaultRows;
+
     }
 
     /**
