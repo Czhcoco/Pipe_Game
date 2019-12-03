@@ -1,6 +1,5 @@
 package views;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Label;
@@ -20,6 +19,8 @@ public class GameplayInfoPane extends BigVBox {
 
     public GameplayInfoPane(StringProperty levelNameProperty, IntegerProperty timerProperty, IntegerProperty numMovesProperty, IntegerProperty numUndoProperty) {
         // TODO
+        bindTo(levelNameProperty, timerProperty, numMovesProperty, numUndoProperty);
+        this.getChildren().addAll(levelNameLabel, timerLabel, numMovesLabel, numUndoLabel);
     }
 
     /**
@@ -47,5 +48,11 @@ public class GameplayInfoPane extends BigVBox {
      */
     private void bindTo(StringProperty levelNameProperty, IntegerProperty timerProperty, IntegerProperty numMovesProperty, IntegerProperty numUndoProperty) {
         // TODO
+        levelNameLabel.textProperty().bind(levelNameProperty);
+        timerLabel.textProperty().bind(timerProperty.asString());
+        numMovesLabel.textProperty().bind(numMovesProperty.asString());
+        numUndoLabel.textProperty().bind(numUndoProperty.asString());
+
     }
 }
+

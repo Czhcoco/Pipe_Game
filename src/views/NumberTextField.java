@@ -3,6 +3,8 @@ package views;
 import javafx.scene.control.TextField;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.regex.Pattern;
+
 /**
  * A {@link TextField} which only allows numeric input.
  */
@@ -38,15 +40,15 @@ public class NumberTextField extends TextField {
      */
     private boolean validate(@NotNull String text) {
         // TODO
-        return true;
+        return (Pattern.matches("[0-9]", text) || text.isEmpty());
     }
 
     /**
      * @return Integer value represented by the text in the {@link TextField}.
      * @throws NumberFormatException If {@link NumberTextField#getCharacters()} cannot be parsed into an integer.
      */
-    public int getValue() {
+    public int getValue() throws NumberFormatException {
         // TODO
-        return 0;
+        return Integer.parseInt(this.getCharacters().toString());
     }
 }

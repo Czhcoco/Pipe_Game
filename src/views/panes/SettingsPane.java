@@ -95,6 +95,19 @@ public class SettingsPane extends GamePane {
     @Override
     public void connectComponents() {
         // TODO
+        leftContainer.getChildren().addAll(
+                returnButton,
+                saveButton,
+                rowBox,
+                colBox,
+                delayBox,
+                flowBox,
+                toggleSoundButton
+        );
+
+        centerContainer.getChildren().addAll(
+                infoText
+        );
     }
 
     /**
@@ -106,6 +119,10 @@ public class SettingsPane extends GamePane {
     @Override
     void styleComponents() {
         // TODO
+        infoText.getStyleClass().add("text-area");
+        infoText.setPrefHeight(Config.HEIGHT);
+        infoText.setEditable(false);
+        infoText.setWrapText(true);
     }
 
     /**
@@ -114,6 +131,24 @@ public class SettingsPane extends GamePane {
     @Override
     void setCallbacks() {
         // TODO
+        returnButton.setOnAction(e -> returnToMainMenu(false));
+        saveButton.setOnAction(e -> {
+            if (validate().isPresent()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Validation Failed");
+                alert.setContentText(validate().get());
+            }
+            returnToMainMenu(true);
+        });
+        toggleSoundButton.setOnAction(e -> {
+            AudioManager.getInstance().setEnabled(!AudioManager.getInstance().isEnabled());
+            if (AudioManager.getInstance().isEnabled())
+                toggleSoundButton.setText("Sound FX: Enabled");
+            else
+                toggleSoundButton.setText("Sound FX: Disabled");
+        });
+
     }
 
     /**
@@ -121,6 +156,7 @@ public class SettingsPane extends GamePane {
      */
     private void fillValues() {
         // TODO
+
     }
 
     /**
@@ -130,6 +166,13 @@ public class SettingsPane extends GamePane {
      */
     private void returnToMainMenu(final boolean writeback) {
         // TODO
+        if (writeback) {
+            FXGame.setDefaultRows(rowsField.getValue());
+            FXGame.setDefaultCols(colsField.getValue());
+            FlowTimer.setDefaultDelay(delayField.getValue());
+            FlowTimer.setDefaultFlowDuration(flowField.getValue());
+        }
+        SceneManager.getInstance().showPane(MainMenuPane.class);
     }
 
     /**
@@ -150,6 +193,14 @@ public class SettingsPane extends GamePane {
     @NotNull
     private Optional<String> validate() {
         // TODO
-        return null;
+        if (rowsField.getValue() < 2)
+            return Optional.of(MSG_BAD_ROW_NUM);
+        if (colsField.getValue() < 2)
+            return Optional.of(MSG_BAD_COL_NUM);
+        if (delayField.getValue() <= 0)
+            return Optional.of(MSG_BAD_DELAY_NUM);
+        if (flowField.getValue() <= 0)
+            return Optional.of(MSG_BAD_FLOW_NUM);
+        return Optional.empty();
     }
 }

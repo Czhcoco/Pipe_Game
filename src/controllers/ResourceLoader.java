@@ -19,7 +19,7 @@ public class ResourceLoader {
 
     static {
         // TODO: Initialize RES_PATH
-        RES_PATH = null;
+        RES_PATH = Paths.get("/resources");
     }
 
     /**
@@ -32,6 +32,9 @@ public class ResourceLoader {
     @NotNull
     public static String getResource(@NotNull final String relativePath) {
         // TODO
-        return null;
+        Path path = Paths.get(RES_PATH.toString(), relativePath);
+        if (path.toFile() == null)
+            throw new ResourceNotFoundException("Resource not found");
+        return path.toString();
     }
 }

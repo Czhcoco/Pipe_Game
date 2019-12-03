@@ -60,6 +60,24 @@ public class LevelEditorPane extends GamePane {
     @Override
     void connectComponents() {
         // TODO
+        leftContainer.getChildren().addAll(
+                returnButton,
+                rowBox,
+                colBox,
+                newGridButton,
+                delayBox,
+                toggleRotationButton,
+                loadButton,
+                saveButton
+        );
+
+        centerContainer.getChildren().add(
+                levelEditor
+        );
+
+        selectedCell.setItems(cellList);
+        selectedCell.getSelectionModel().select(0);
+
     }
 
     /**
@@ -70,6 +88,7 @@ public class LevelEditorPane extends GamePane {
     @Override
     void styleComponents() {
         // TODO
+        selectedCell.setFixedCellSize(Config.LIST_CELL_HEIGHT);
     }
 
     /**
@@ -78,5 +97,11 @@ public class LevelEditorPane extends GamePane {
     @Override
     void setCallbacks() {
         // TODO
+        saveButton.setOnAction(e -> levelEditor.saveToFile());
+        newGridButton.setOnAction(e -> levelEditor.changeAttributes(rowField.getValue(), colField.getValue(), delayField.getValue()));
+        toggleRotationButton.setOnAction(e -> levelEditor.toggleSourceTileRotation());
+        loadButton.setOnAction(e -> levelEditor.loadFromFile());
+        returnButton.setOnAction(e -> SceneManager.getInstance().showPane(MainMenuPane.class));
+        levelEditor.setOnMouseClicked(e -> levelEditor.setTile(selectedCell.getSelectionModel().getSelectedItem(), e.getX(), e.getY()));
     }
 }

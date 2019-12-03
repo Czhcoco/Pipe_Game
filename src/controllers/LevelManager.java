@@ -9,7 +9,6 @@ import javafx.scene.control.Alert;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
@@ -70,6 +69,7 @@ public class LevelManager {
     public void setMapDirectory(@NotNull Path mapDirectory) {
         // TODO
         this.mapDirectory = mapDirectory;
+        loadLevelNamesFromDisk();
     }
 
     /**
@@ -128,7 +128,7 @@ public class LevelManager {
     public void setLevel(@Nullable String levelName) {
         // TODO
         if (levelName == null || levelName.isEmpty()) {
-            throw new IllegalArgumentException("Invalid level name: " + levelName);
+            throw new IllegalArgumentException("Invalid level name");
         }
 
         this.curLevelNameProperty.setValue(levelName);

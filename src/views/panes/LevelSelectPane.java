@@ -3,6 +3,7 @@ package views.panes;
 import controllers.LevelManager;
 import controllers.SceneManager;
 import io.Deserializer;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ListView;
@@ -38,6 +39,17 @@ public class LevelSelectPane extends GamePane {
     @Override
     void connectComponents() {
         // TODO
+        leftContainer.getChildren().addAll(
+                returnButton,
+                chooseMapDirButton,
+                levelsListView,
+                playButton,
+                playRandom
+        );
+
+        centerContainer.getChildren().addAll(
+                levelPreview
+        );
     }
 
     /**
@@ -46,6 +58,7 @@ public class LevelSelectPane extends GamePane {
     @Override
     void styleComponents() {
         // TODO
+        playButton.setVisible(false);
     }
 
     /**
@@ -54,6 +67,18 @@ public class LevelSelectPane extends GamePane {
     @Override
     void setCallbacks() {
         // TODO
+        returnButton.setOnAction(e -> SceneManager.getInstance().showPane(MainMenuPane.class));
+        chooseMapDirButton.setOnAction(e -> promptUserForMapDirectory());
+        playButton.setOnAction(e -> startGame(false));
+        playRandom.setOnAction(e -> startGame(true));
+        levelsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>()
+        {
+            public void changed(ObservableValue<? extends String> obs,
+                                final String oldValue, final String newValue)
+            {
+                onMapSelected(obs, oldValue, newValue);
+            }
+        });
     }
 
     /**
@@ -66,8 +91,28 @@ public class LevelSelectPane extends GamePane {
      *
      * @param generateRandom Whether to use a generated map.
      */
-    private void startGame(final boolean generateRandom) {
+    private void startGame(final boolean generateRandom)  {
         // TODO
+        LevelManager manager = LevelManager.getInstance();
+        Deserializer newGame;
+        FXGame newFXGame;
+        try {
+            if (generateRandom) {
+                newGame = new Deserializer(manager.getCurrentLevelPath());
+                newFXGame = newGame.parseFXGame();
+                newFXGame.startCountdown();
+            } else {
+                manager.setLevel(levelsListView.getSelectionModel().getSelectedItem());
+                newGame = new Deserializer(manager.getCurrentLevelPath());
+                newFXGame = newGame.parseFXGame();
+                newFXGame.startCountdown();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        SceneManager.getInstance().showPane(GameplayPane.class);
+
     }
 
     /**
@@ -79,6 +124,12 @@ public class LevelSelectPane extends GamePane {
      */
     private void onMapSelected(ObservableValue<? extends String> observable, String oldValue, String newValue) {
         // TODO
+        if (newValue == null || levelsListView.getItems().stream().noneMatch(it -> it.equals(newValue))) {
+            levelPreview.setWidth(0);
+            levelPreview.setHeight(0);
+            return;
+        }
+        LevelManager.getInstance().setLevel(newValue);
     }
 
     /**
@@ -91,6 +142,12 @@ public class LevelSelectPane extends GamePane {
      */
     private void promptUserForMapDirectory() {
         // TODO
+        DirectoryChooser chooser = new DirectoryChooser();
+        File folder = chooser.showDialog(null);
+
+        if (folder != null) {
+            commitMapDirectoryChange(folder);
+        }
     }
 
     /**
@@ -100,5 +157,7 @@ public class LevelSelectPane extends GamePane {
      */
     private void commitMapDirectoryChange(File dir) {
         // TODO
+        levelsListView.getSelectionModel().clearSelection();
+        LevelManager.getInstance().setMapDirectory(dir.toPath());
     }
 }

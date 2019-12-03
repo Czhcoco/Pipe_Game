@@ -110,7 +110,7 @@ public class SceneManager {
         // TODO
         if (scenes.get(pane) == null)
             throw new IllegalArgumentException("Pane is not known");
-        stage.setScene(scenes.get(pane));
+        showScene(scenes.get(pane));
     }
 
     /**

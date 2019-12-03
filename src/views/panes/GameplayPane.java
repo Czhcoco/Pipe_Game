@@ -56,6 +56,7 @@ public class GameplayPane extends GamePane {
     void connectComponents() {
         // TODO
 
+
     }
 
     /**
