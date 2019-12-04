@@ -132,7 +132,7 @@ public class LevelManager {
      */
     public void setLevel(@Nullable String levelName) {
         // TODO
-        if (levelName == null || levelName.isBlank()) {
+        if (levelName == null || levelName.isEmpty()) {
             throw new IllegalArgumentException("Invalid level name");
         }
 
@@ -156,9 +156,10 @@ public class LevelManager {
     @Nullable
     public String getAndSetNextLevel() {
         // TODO
-        if (curLevelNameProperty.getName().isEmpty())
-            throw new IllegalArgumentException("curLevelNameProperty is empty");
+//        if (curLevelNameProperty.getName().isEmpty())
+//            throw new IllegalArgumentException("curLevelNameProperty is empty");
         int current = levelNames.indexOf(curLevelNameProperty.getValue());
+        System.out.println(current);
         if (current == -1) {
             throw new IllegalStateException("Current Level Name is not in Level Names list!");
         }

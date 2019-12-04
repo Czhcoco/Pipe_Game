@@ -212,10 +212,12 @@ public class GameplayPane extends GamePane {
         // TODO
         endGame();
         LevelManager manager = LevelManager.getInstance();
-        if (manager.getCurrentLevelProperty().getName().isEmpty()) {
+        if (manager.getCurrentLevelProperty().getName().equals("<generate>")) {
+            System.out.println(22);
             FXGame newFXGame = new FXGame();
             startGame(newFXGame);
         } else {
+            System.out.println(33);
             String nextLevel = manager.getAndSetNextLevel();
             if (nextLevel != null) {
                 try {

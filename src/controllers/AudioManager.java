@@ -69,14 +69,21 @@ public class AudioManager {
         // TODO
 
         if (this.isEnabled()){
-                var media = new MediaPlayer(new Media(ResourceLoader.getResource("assets/audio/" + name + ".mp3")));
-                soundPool.add(media);
-                media.play();
+            MediaPlayer media;
+            if (name.equals("move")) {
+                    media = new MediaPlayer(new Media(ResourceLoader.getResource("assets/audio/shoot.wav")));
+            } else {
 
-                media.setOnEndOfMedia(() -> {
-                    soundPool.remove(media);
-                    media.dispose();
-                });
+                media = new MediaPlayer(new Media(ResourceLoader.getResource("assets/audio/" + name + ".mp3")));
+            }
+            soundPool.add(media);
+            media.play();
+
+            MediaPlayer finalMedia = media;
+            media.setOnEndOfMedia(() -> {
+                    soundPool.remove(finalMedia);
+                    finalMedia.dispose();
+            });
 
         }
     }
