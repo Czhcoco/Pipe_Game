@@ -40,6 +40,7 @@ public class GameplayPane extends GamePane {
     private HBox bottomBar = new HBox(20);
     private Canvas queueCanvas = new Canvas();
     private Button quitToMenuButton = new BigButton("Quit to menu");
+    private Button resumeButton = new BigButton("Pause");
 
     private FXGame game;
 
@@ -64,7 +65,7 @@ public class GameplayPane extends GamePane {
 
         topBar.getChildren().addAll(infoPane);
         canvasContainer.getChildren().addAll(infoPane, gameplayCanvas);
-        bottomBar.getChildren().addAll(queueCanvas, quitToMenuButton);
+        bottomBar.getChildren().addAll(queueCanvas, quitToMenuButton, resumeButton);
         topBar.setAlignment(Pos.TOP_CENTER);
 //        canvasContainer.getChildren().addAll(topBar, gameplayCanvas, bottomBar);
 
@@ -106,6 +107,7 @@ public class GameplayPane extends GamePane {
     void setCallbacks() {
         // TODO
         quitToMenuButton.setOnAction(e -> doQuitToMenuAction());
+
         gameplayCanvas.setOnMouseClicked(e -> onCanvasClicked(e));
         this.setOnKeyPressed(e -> onKeyPressed(e));
     }
@@ -328,7 +330,27 @@ public class GameplayPane extends GamePane {
             }
         });
 
+        resumeButton.setOnAction(e -> {
+            if (resumeButton.getText().equals("Pause")) {
+                resumeButton.setText("Resume");
+                game.addOnTickHandler(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Platform.runLater(() -> {
+                            ticksElapsed.set(ticksElapsed.get() - 1);
+//                            game.updateState();
+//                            game.renderMap(gameplayCanvas);
+//                            game.renderQueue(queueCanvas);
+                        });
+                    }
+                });
+            } else
+                resumeButton.setText("Pause");
+        });
+
         game.startCountdown();
+
+
     }
 
     /**
