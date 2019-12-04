@@ -78,7 +78,29 @@ public class TerminationCell extends Cell {
     @Override
     public Renderer.CellImage getImageRep() {
         // TODO
-        return isFilled ? new Renderer.CellImage(FILLED_IMG, 0) : new Renderer.CellImage(UNFILLED_IMG, 0);
+        if (type == Type.SINK) {
+            switch (pointingTo) {
+                case UP:
+                    return isFilled ? new Renderer.CellImage(FILLED_IMG, 180) : new Renderer.CellImage(UNFILLED_IMG, 180);
+                case RIGHT:
+                    return isFilled ? new Renderer.CellImage(FILLED_IMG, 270) : new Renderer.CellImage(UNFILLED_IMG, 270);
+                case DOWN:
+                    return isFilled ? new Renderer.CellImage(FILLED_IMG, 0) : new Renderer.CellImage(UNFILLED_IMG, 0);
+                default:
+                    return isFilled ? new Renderer.CellImage(FILLED_IMG, 90) : new Renderer.CellImage(UNFILLED_IMG, 90);
+            }
+        } else {
+            switch (pointingTo) {
+                case UP:
+                    return isFilled ? new Renderer.CellImage(FILLED_IMG, 0) : new Renderer.CellImage(UNFILLED_IMG, 0);
+                case RIGHT:
+                    return isFilled ? new Renderer.CellImage(FILLED_IMG, 90) : new Renderer.CellImage(UNFILLED_IMG, 90);
+                case DOWN:
+                    return isFilled ? new Renderer.CellImage(FILLED_IMG, 180) : new Renderer.CellImage(UNFILLED_IMG, 180);
+                default:
+                    return isFilled ? new Renderer.CellImage(FILLED_IMG, 270) : new Renderer.CellImage(UNFILLED_IMG, 270);
+            }
+        }
     }
 
     @NotNull

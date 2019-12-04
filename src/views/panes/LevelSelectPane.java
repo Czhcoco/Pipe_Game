@@ -1,9 +1,9 @@
 package views.panes;
 
 import controllers.LevelManager;
+import controllers.Renderer;
 import controllers.SceneManager;
 import io.Deserializer;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ListView;
@@ -61,7 +61,7 @@ public class LevelSelectPane extends GamePane {
     @Override
     void styleComponents() {
         // TODO
-        playButton.setVisible(false);
+        playButton.setDisable(true);
     }
 
     /**
@@ -74,14 +74,7 @@ public class LevelSelectPane extends GamePane {
         chooseMapDirButton.setOnAction(e -> promptUserForMapDirectory());
         playButton.setOnAction(e -> startGame(false));
         playRandom.setOnAction(e -> startGame(true));
-        levelsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>()
-        {
-            public void changed(ObservableValue<? extends String> obs,
-                                final String oldValue, final String newValue)
-            {
-                onMapSelected(obs, oldValue, newValue);
-            }
-        });
+        levelsListView.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> onMapSelected(obs, oldValue, newValue));
     }
 
     /**
@@ -97,18 +90,19 @@ public class LevelSelectPane extends GamePane {
     private void startGame(final boolean generateRandom)  {
         // TODO
         LevelManager manager = LevelManager.getInstance();
-        Deserializer newGame;
         FXGame newFXGame;
+        GameplayPane gpp = SceneManager.getInstance().getPane(GameplayPane.class);
         try {
             if (generateRandom) {
-                newGame = new Deserializer(manager.getCurrentLevelPath());
-                newFXGame = newGame.parseFXGame();
-                newFXGame.startCountdown();
+                manager.setLevel("<generate>");
+                newFXGame = new FXGame();
+                gpp.startGame(newFXGame);
+//                newFXGame.startCountdown();
             } else {
                 manager.setLevel(levelsListView.getSelectionModel().getSelectedItem());
-                newGame = new Deserializer(manager.getCurrentLevelPath());
+                Deserializer newGame = new Deserializer(manager.getCurrentLevelPath());
                 newFXGame = newGame.parseFXGame();
-                newFXGame.startCountdown();
+                gpp.startGame(newFXGame);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -132,7 +126,17 @@ public class LevelSelectPane extends GamePane {
             levelPreview.setHeight(0);
             return;
         }
-        LevelManager.getInstance().setLevel(newValue);
+        LevelManager manager = LevelManager.getInstance();
+        manager.setLevel(newValue);
+        String path = manager.getCurrentLevelPath().toString();
+        try {
+            var gp = new Deserializer(path).parseGameFile();
+            Renderer.renderMap(levelPreview, gp.cells);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        playButton.setDisable(false);
     }
 
     /**

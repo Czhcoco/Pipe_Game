@@ -88,12 +88,16 @@ public class LevelManager {
     private void loadLevelNamesFromDisk() {
         // TODO
         levelNames.clear();
-        try {
-            Stream<Path> pathStream = Files.walk(Paths.get(String.valueOf(mapDirectory)), 1)
-                    .filter(path -> path.getParent().toString().equals(mapDirectory))
-                    .sorted(Comparator.comparing(Path::getFileName));
-            pathStream.forEach(path -> levelNames.add(path.getFileName().toString()));
-
+        try (Stream<Path> stream = Files.walk(Paths.get(String.valueOf(mapDirectory)), 1)) {
+            List<String> files = stream
+                    .filter(f -> f.toFile().isFile())
+                    .map(Path::getFileName)
+                    .map(Path::toString)
+                    .filter(it -> it.endsWith(".map"))
+                    .sorted(String::compareTo)
+                    .collect(Collectors.toList());
+                levelNames.clear();
+                levelNames.addAll(files);
         } catch (IOException e) {
             levelNames.clear();
 
@@ -116,7 +120,8 @@ public class LevelManager {
     @NotNull
     public Path getCurrentLevelPath() {
         // TODO
-        return mapDirectory.toAbsolutePath();
+        Path path = Paths.get(String.valueOf(mapDirectory), curLevelNameProperty.get());
+        return path;
     }
 
     /**
@@ -127,7 +132,7 @@ public class LevelManager {
      */
     public void setLevel(@Nullable String levelName) {
         // TODO
-        if (levelName == null || levelName.isEmpty()) {
+        if (levelName == null || levelName.isBlank()) {
             throw new IllegalArgumentException("Invalid level name");
         }
 

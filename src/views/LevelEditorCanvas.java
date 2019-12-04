@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -70,9 +71,24 @@ public class LevelEditorCanvas extends Canvas {
      */
     private void resetMap(int rows, int cols, int delay) {
         // TODO
-        gameProp.rows = rows;
-        gameProp.cols = cols;
-        gameProp.delay = delay;
+
+        Cell[][] cells = new Cell[rows][cols];
+        for (int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                var coord = new Coordinate(i, j);
+                if (i == 0 || j == 0) {
+                    cells[i][j] = new Wall(coord);
+                } else if (i == rows - 1 || j == cols - 1) {
+                    cells[i][j] = new Wall(coord);
+                } else {
+                    cells[i][j] = new FillableCell(coord);
+                }
+            }
+        }
+
+        gameProp = new GameProperties(rows, cols, cells, delay);
+
+        renderCanvas();
     }
 
     /**
@@ -114,17 +130,26 @@ public class LevelEditorCanvas extends Canvas {
                         (row == gameProp.rows - 1 && col == 0) ||
                         (row == gameProp.rows - 1 && col == gameProp.cols-1))
                     break;
-                if(row == 0)
-                    setTileByMapCoord(new TerminationCell(coord, Direction.UP, TerminationCell.Type.SINK));
-                else if(row == gameProp.rows - 1)
-                    setTileByMapCoord(new TerminationCell(coord, Direction.DOWN, TerminationCell.Type.SINK));
-                else if(col == 0)
-                    setTileByMapCoord(new TerminationCell(coord, Direction.LEFT, TerminationCell.Type.SINK));
-                else if(col == gameProp.cols - 1)
-                    setTileByMapCoord(new TerminationCell(coord, Direction.RIGHT, TerminationCell.Type.SINK));
-                else
-                    setTileByMapCoord(new TerminationCell(coord, Direction.UP, TerminationCell.Type.SOURCE));
+                if(row == 0) {
+                    sinkCell = new TerminationCell(coord, Direction.UP, TerminationCell.Type.SINK);
+                    setTileByMapCoord(sinkCell);
+                }
+                else if(row == gameProp.rows - 1) {
+                    sinkCell = new TerminationCell(coord, Direction.DOWN, TerminationCell.Type.SINK);
+                    setTileByMapCoord(sinkCell);
+                } else if(col == 0) {
+                    sinkCell = new TerminationCell(coord, Direction.LEFT, TerminationCell.Type.SINK);
+                    setTileByMapCoord(sinkCell);
+                } else if(col == gameProp.cols - 1) {
+                    sinkCell = new TerminationCell(coord, Direction.RIGHT, TerminationCell.Type.SINK);
+                    setTileByMapCoord(sinkCell);
+                } else {
+                    sourceCell = new TerminationCell(coord, Direction.UP, TerminationCell.Type.SOURCE);
+                    setTileByMapCoord(sourceCell);
+                }
         }
+
+        renderCanvas();
     }
 
     /**
@@ -236,12 +261,23 @@ public class LevelEditorCanvas extends Canvas {
     public void saveToFile() {
         // TODO
         if (checkValidity().isPresent()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Validation Failed");
+            alert.setContentText(checkValidity().get());
+            alert.getButtonTypes().clear();
+            alert.getButtonTypes().setAll(ButtonType.OK);
+
+            alert.showAndWait();
+            if (alert.getResult().equals(ButtonType.OK)){
+                return;
+            }
             return;
         }
 
         File file = getTargetSaveDirectory();
         if (file != null) {
-            exportToFile(file.toPath());
+            exportToFile(Paths.get(String.valueOf(file)));
         }
     }
 
@@ -273,6 +309,7 @@ public class LevelEditorCanvas extends Canvas {
      */
     private void exportToFile(@NotNull Path p) {
         // TODO
+
         try {
             Serializer serializer = new Serializer(p);
             serializer.serializeGameProp(gameProp);

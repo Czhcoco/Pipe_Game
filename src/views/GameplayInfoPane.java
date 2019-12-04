@@ -1,5 +1,6 @@
 package views;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Label;
@@ -19,7 +20,7 @@ public class GameplayInfoPane extends BigVBox {
 
     public GameplayInfoPane(StringProperty levelNameProperty, IntegerProperty timerProperty, IntegerProperty numMovesProperty, IntegerProperty numUndoProperty) {
         // TODO
-        bindTo(levelNameProperty, timerProperty, numMovesProperty, numUndoProperty);
+//        bindTo(levelNameProperty, timerProperty, numMovesProperty, numUndoProperty);
         this.getChildren().addAll(levelNameLabel, timerLabel, numMovesLabel, numUndoLabel);
     }
 
@@ -46,12 +47,12 @@ public class GameplayInfoPane extends BigVBox {
      * @param numMovesProperty Number of Moves Property
      * @param numUndoProperty Number of Undoes Property
      */
-    private void bindTo(StringProperty levelNameProperty, IntegerProperty timerProperty, IntegerProperty numMovesProperty, IntegerProperty numUndoProperty) {
+    public void bindTo(StringProperty levelNameProperty, IntegerProperty timerProperty, IntegerProperty numMovesProperty, IntegerProperty numUndoProperty) {
         // TODO
-        levelNameLabel.textProperty().bind(levelNameProperty);
-        timerLabel.textProperty().bind(timerProperty.asString());
-        numMovesLabel.textProperty().bind(numMovesProperty.asString());
-        numUndoLabel.textProperty().bind(numUndoProperty.asString());
+        levelNameLabel.textProperty().bind(Bindings.createStringBinding(()->"Level: " + levelNameProperty.get(),levelNameProperty));
+        timerLabel.textProperty().bind(Bindings.createStringBinding(()->"Time: " + format(timerProperty.get()),timerProperty));
+        numMovesLabel.textProperty().bind(Bindings.createStringBinding(()->"Moves: "+ numMovesProperty.get(),numMovesProperty));
+        numUndoLabel.textProperty().bind(Bindings.createStringBinding(()->"Undo Count: "+ numUndoProperty.get(),numMovesProperty));
 
     }
 }

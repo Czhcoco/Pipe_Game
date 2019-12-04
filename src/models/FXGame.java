@@ -87,7 +87,9 @@ public class FXGame {
      */
     private FXGame(int rows, int cols) {
         // TODO
-        this(rows, cols, 0, null, null);
+        map = new Map(rows + 2, cols +2);
+        pipeQueue = new PipeQueue();
+        flowTimer = new FlowTimer();
     }
 
     /**
@@ -103,7 +105,7 @@ public class FXGame {
         // TODO
         map = new Map(rows, cols, cells);
         pipeQueue = new PipeQueue(pipes);
-        flowTimer = new FlowTimer();
+        flowTimer = new FlowTimer(delay);
     }
 
     /**
@@ -213,6 +215,9 @@ public class FXGame {
         } else if (flowTimer.distance() > 0) {
             map.fillTiles(flowTimer.distance());
         }
+//        if (hasWon()) {
+//            fillAllPipes();
+//        }
     }
 
     /**

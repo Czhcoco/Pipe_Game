@@ -69,8 +69,7 @@ public class AudioManager {
         // TODO
 
         if (this.isEnabled()){
-            try {
-                var media = new MediaPlayer(new Media(AudioManager.class.getResource("/assets/audio/" + name + ".mp3").toURI().toString()));
+                var media = new MediaPlayer(new Media(ResourceLoader.getResource("assets/audio/" + name + ".mp3")));
                 soundPool.add(media);
 
                 media.play();
@@ -79,9 +78,6 @@ public class AudioManager {
                     soundPool.remove(media);
                     media.dispose();
                 });
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -90,7 +86,7 @@ public class AudioManager {
      *
      * @param name Enumeration of the sound, given by {@link SoundRes}.
      */
-    public void playSound(final SoundRes name) {
+    public void playSound(final String name) {
         playFile(name.toString());
     }
 }

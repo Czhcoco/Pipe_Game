@@ -2,10 +2,7 @@ package views.panes;
 
 import controllers.AudioManager;
 import controllers.SceneManager;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import models.Config;
@@ -135,15 +132,7 @@ public class SettingsPane extends GamePane {
     void setCallbacks() {
         // TODO
         returnButton.setOnAction(e -> returnToMainMenu(false));
-        saveButton.setOnAction(e -> {
-            if (validate().isPresent()) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Validation Failed");
-                alert.setContentText(validate().get());
-            }
-            returnToMainMenu(true);
-        });
+        saveButton.setOnAction(e -> returnToMainMenu(true));
         toggleSoundButton.setOnAction(e -> {
             AudioManager.getInstance().setEnabled(!AudioManager.getInstance().isEnabled());
             if (AudioManager.getInstance().isEnabled())
@@ -170,6 +159,20 @@ public class SettingsPane extends GamePane {
     private void returnToMainMenu(final boolean writeback) {
         // TODO
         if (writeback) {
+            boolean valid = validate().isPresent();
+            if (valid) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Validation Failed");
+                alert.setContentText(validate().get());
+                alert.getButtonTypes().clear();
+                alert.getButtonTypes().setAll(ButtonType.OK);
+
+                alert.showAndWait();
+                if (alert.getResult().equals(ButtonType.OK)){
+                    return;
+                }
+            }
             FXGame.setDefaultRows(rowsField.getValue());
             FXGame.setDefaultCols(colsField.getValue());
             FlowTimer.setDefaultDelay(delayField.getValue());

@@ -1,5 +1,6 @@
 package io;
 
+import javafx.beans.property.StringProperty;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedWriter;
@@ -30,47 +31,43 @@ public class Serializer {
      */
     public void serializeGameProp(@NotNull final GameProperties prop) throws IOException {
         // TODO
-        BufferedWriter b = new BufferedWriter(new PrintWriter(path.toFile()));
-        b.write("# rows");
-        b.newLine();
-        b.write(prop.rows);
+        PrintWriter b = new PrintWriter(path.toFile());
 
-        b.newLine();
-        b.newLine();
+        b.print("# rows");
+        b.println();
+        b.print(prop.rows);
+        b.println();
 
-        b.write("# cols");
-        b.newLine();
-        b.write(prop.cols);
+        b.print("# cols");
+        b.println();
+        b.print(prop.cols);
+        b.println();
 
-        b.newLine();
-        b.newLine();
+        b.print("# delay before first flow");
+        b.println();
+        b.print(prop.delay);
+        b.println();
 
-        b.write("# delay before first flow");
-        b.newLine();
-        b.write(prop.delay);
-
-        b.newLine();
-        b.newLine();
-
-        b.write("# map");
-        b.newLine();
-        for(int i = 0; i < prop.cells.length; i++){
-            for(int j = 0; j < prop.cells[0].length; j++){
-                b.write(prop.cells[i][j].toSingleChar());
+        b.print("# map");
+        b.println();
+        for (var row: prop.cells){
+            for (var item: row){
+                b.print(item.toSingleChar());
             }
-            b.newLine();
+            b.println();
         }
 
-        b.newLine();
-        b.write("# optional: list of pipes to start with");
-        b.newLine();
-        b.write("# TR: Top-Right, TL: Top-Left, BL: Bottom-Left, BR: Bottom-Right, CR: Cross");
-        b.newLine();
-        for(int i = 0; i < prop.pipes.size(); i++){
-            b.write(prop.pipes.get(i).toString());
-            if(i != prop.pipes.size()-1)
-                b.write(", ");
-        }
-        b.newLine();
+
+//        b.newLine();
+//        b.write("# optional: list of pipes to start with");
+//        b.newLine();
+//        b.write("# TR: Top-Right, TL: Top-Left, BL: Bottom-Left, BR: Bottom-Right, CR: Cross");
+//        b.newLine();
+//        for(int i = 0; i < prop.pipes.size(); i++){
+//            b.write(prop.pipes.get(i).toString());
+//            if(i != prop.pipes.size()-1)
+//                b.write(", ");
+//        }
+//        b.newLine();
     }
 }

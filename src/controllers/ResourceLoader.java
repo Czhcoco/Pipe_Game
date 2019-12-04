@@ -19,7 +19,7 @@ public class ResourceLoader {
 
     static {
         // TODO: Initialize RES_PATH
-        RES_PATH = Paths.get("/resources").toAbsolutePath();
+        RES_PATH = Paths.get("/resources");
     }
 
     /**
@@ -32,9 +32,9 @@ public class ResourceLoader {
     @NotNull
     public static String getResource(@NotNull final String relativePath) {
         // TODO
-        Path path = Paths.get(RES_PATH.toString(), relativePath);
+        Path path = Paths.get(RES_PATH.resolve(relativePath).toString());
         if (path.toFile() == null)
             throw new ResourceNotFoundException("Resource not found");
-        return path.toString();
+        return ResourceLoader.class.getResource(RES_PATH.resolve(relativePath).toString()).toExternalForm();
     }
 }

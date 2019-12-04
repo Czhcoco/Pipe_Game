@@ -18,12 +18,12 @@ public class FlowTimer {
     /**
      * Default delay before the water starts flowing.
      */
-    private static int defaultDelay = 10;
+    private static int defaultDelay = 2;
 
     /**
      * Default duration between each water flow.
      */
-    private static int defaultFlowDuration = 5;
+    private static int defaultFlowDuration = 3;
 
     /**
      * Backing timer.
@@ -101,14 +101,28 @@ public class FlowTimer {
      */
     FlowTimer(int initialValue) {
         // TODO
-        currentValue.set(0 - initialValue);
+        currentValue.set(-1);
         ticksElapsed = 0;
-        registerFlowCallback(new Runnable() {
+        defaultDelay = initialValue;
+        registerFlowCallback(new TimerTask() {
             @Override
             public void run() {
-                currentValue.set(currentValue.get() + 1);
+                Platform.runLater(()-> {
+                    currentValue.set(currentValue.get() + 1);
+//                    System.out.println(currentValue.getValue());
+                });
             }
         });
+
+        registerTickCallback(new TimerTask() {
+             @Override
+             public void run() {
+                 Platform.runLater(() -> {
+                     ticksElapsed++;
+//                     System.out.println(ticksElapsed);
+                 });
+             }
+         });
     }
 
     /**
@@ -139,16 +153,22 @@ public class FlowTimer {
      */
     void start() {
         // TODO
-        flowTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                Platform.runLater(() -> {
-                    ticksElapsed++;
-                    if (ticksElapsed % defaultFlowDuration == 0)
-                        currentValue.set(currentValue.get() + 1);
-                });
-            }
-        }, 1000, 1000);
+        onTickCallbacks.forEach((t) -> {
+            flowTimer.scheduleAtFixedRate((TimerTask) t, 1000, 1000);
+        });
+
+        onFlowCallbacks.forEach((t) -> {
+            flowTimer.scheduleAtFixedRate((TimerTask) t, 1000 * defaultDelay, 1000 * defaultFlowDuration);
+        });
+
+//        flowTimer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                    ticksElapsed++;
+//                    if (ticksElapsed % defaultFlowDuration == 0)
+//                        currentValue.set(currentValue.get() + 1);
+//            }
+//        }, 1000, 1000);
     }
 
     /**

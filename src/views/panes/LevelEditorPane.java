@@ -66,6 +66,7 @@ public class LevelEditorPane extends GamePane {
                 colBox,
                 newGridButton,
                 delayBox,
+                selectedCell,
                 toggleRotationButton,
                 loadButton,
                 saveButton

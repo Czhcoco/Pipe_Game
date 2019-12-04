@@ -40,7 +40,7 @@ public class NumberTextField extends TextField {
      */
     private boolean validate(@NotNull String text) {
         // TODO
-        return (Pattern.matches("[0-9]", text) || text.isEmpty());
+        return (text.matches("[0-9]*") || text.isBlank());
     }
 
     /**

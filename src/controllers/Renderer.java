@@ -87,6 +87,10 @@ public class Renderer {
         // TODO
         int row = map.length;
         int col = map[0].length;
+
+        canvas.setHeight(row * TILE_SIZE);
+        canvas.setWidth(col *TILE_SIZE);
+
         GraphicsContext gc = canvas.getGraphicsContext2D();
         for(int i = 0; i < row; i++){
             for(int j = 0; j < col; j++){
@@ -104,10 +108,14 @@ public class Renderer {
      */
     public static void renderQueue(@NotNull Canvas canvas, @NotNull List<Pipe> pipeQueue) {
         // TODO
+        int width = pipeQueue.size();
+        canvas.setHeight(TILE_SIZE);
+        canvas.setWidth(width * (TILE_SIZE + 3 * QUEUE_TILE_PADDING));
+
         GraphicsContext gc = canvas.getGraphicsContext2D();
         for(int i = 0; i < pipeQueue.size(); i++){
             CellImage image = pipeQueue.get(i).getImageRep();
-            drawRotatedImage(gc, image.image, image.rotation, i*TILE_SIZE, 0);
+            drawRotatedImage(gc, image.image, image.rotation, i * TILE_SIZE + (i + 3) * QUEUE_TILE_PADDING, 0);
         }
     }
 }

@@ -25,26 +25,57 @@ public class SceneManager {
      */
     @NotNull
     private final Scene mainMenuScene = new Scene(new MainMenuPane(), Config.WIDTH / 2.0, Config.HEIGHT);
+    //Debug
+//    private final Scene settingsScene = new Scene(new MainMenuPane(), Config.WIDTH / 2.0, Config.HEIGHT);
+//    private final Scene levelSelectScene = new Scene(new MainMenuPane(), Config.WIDTH / 2.0, Config.HEIGHT);
+//    private final Scene gameplayScene = new Scene(new MainMenuPane(), Config.WIDTH / 2.0, Config.HEIGHT);
+//    private final Scene levelEditorScene = new Scene(new MainMenuPane(), Config.WIDTH / 2.0, Config.HEIGHT);
+
     /**
      * Settings scene.
      */
     @NotNull
     private final Scene settingsScene = new Scene(new SettingsPane(), Config.WIDTH, Config.HEIGHT);
+//    //debug
+//    private final Scene mainMenuScene = new Scene(new SettingsPane(), Config.WIDTH, Config.HEIGHT);
+//    private final Scene levelSelectScene = new Scene(new SettingsPane(), Config.WIDTH, Config.HEIGHT);
+//    private final Scene gameplayScene = new Scene(new SettingsPane(), Config.WIDTH, Config.HEIGHT);
+//    private final Scene levelEditorScene = new Scene(new SettingsPane(), Config.WIDTH, Config.HEIGHT);
+
     /**
      * Level select scene.
      */
     @NotNull
     private final Scene levelSelectScene = new Scene(new LevelSelectPane(), Config.WIDTH, Config.HEIGHT);
+    //debug
+//    private final Scene mainMenuScene = new Scene(new LevelSelectPane(), Config.WIDTH, Config.HEIGHT);
+//    private final Scene levelEditorScene = new Scene(new LevelSelectPane(), Config.WIDTH, Config.HEIGHT);
+//    private final Scene gameplayScene = new Scene(new LevelSelectPane(), Config.WIDTH, Config.HEIGHT);
+//    private final Scene settingsScene = new Scene(new LevelSelectPane(), Config.WIDTH, Config.HEIGHT);
+
     /**
      * Gameplay scene.
      */
     @NotNull
     private final Scene gameplayScene = new Scene(new GameplayPane(), Config.WIDTH, Config.HEIGHT);
+//    private final Scene mainMenuScene = new Scene(new GameplayPane(), Config.WIDTH, Config.HEIGHT);
+//    private final Scene levelSelectScene = new Scene(new GameplayPane(), Config.WIDTH, Config.HEIGHT);
+//    private final Scene levelEditorScene = new Scene(new GameplayPane(), Config.WIDTH, Config.HEIGHT);
+//    private final Scene settingsScene = new Scene(new GameplayPane(), Config.WIDTH, Config.HEIGHT);
+
+
     /**
      * Level editor scene.
      */
     @NotNull
     private final Scene levelEditorScene = new Scene(new LevelEditorPane(), Config.WIDTH, Config.HEIGHT);
+//    //debug
+//    private final Scene mainMenuScene = new Scene(new LevelEditorPane(), Config.WIDTH, Config.HEIGHT);
+//    private final Scene levelSelectScene = new Scene(new LevelEditorPane(), Config.WIDTH, Config.HEIGHT);
+//    private final Scene gameplayScene = new Scene(new LevelEditorPane(), Config.WIDTH, Config.HEIGHT);
+//    private final Scene settingsScene = new Scene(new LevelEditorPane(), Config.WIDTH, Config.HEIGHT);
+
+
     /**
      * Map for fast lookup of {@link GamePane} to their respective {@link Scene}.
      */
