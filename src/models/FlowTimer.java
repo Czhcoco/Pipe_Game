@@ -101,7 +101,7 @@ public class FlowTimer {
      */
     FlowTimer(int initialValue) {
         // TODO
-        setDefaultDelay(initialValue);
+        currentValue.set(0 - initialValue);
         ticksElapsed = 0;
         registerFlowCallback(new Runnable() {
             @Override

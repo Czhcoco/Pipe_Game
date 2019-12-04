@@ -50,6 +50,9 @@ public class LevelSelectPane extends GamePane {
         centerContainer.getChildren().addAll(
                 levelPreview
         );
+
+        this.setLeft(leftContainer);
+        this.setCenter(centerContainer);
     }
 
     /**

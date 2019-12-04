@@ -115,6 +115,13 @@ public class PipeQueue {
      */
     public void render(@NotNull Canvas canvas) {
         // TODO
+//        LinkedList<Pipe> pl = new LinkedList<>();
+//        while(this.peek() != null){
+//            pl.add(this.peek());
+//            this.consume();
+//        }
+//        Platform.runLater(() -> Renderer.renderQueue(canvas, pl));
+        Renderer.renderQueue(canvas, pipeQueue);
     }
 
     /**

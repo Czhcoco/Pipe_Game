@@ -108,6 +108,9 @@ public class SettingsPane extends GamePane {
         centerContainer.getChildren().addAll(
                 infoText
         );
+
+        this.setLeft(leftContainer);
+        this.setCenter(centerContainer);
     }
 
     /**

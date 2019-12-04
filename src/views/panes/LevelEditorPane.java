@@ -78,6 +78,9 @@ public class LevelEditorPane extends GamePane {
         selectedCell.setItems(cellList);
         selectedCell.getSelectionModel().select(0);
 
+        this.setLeft(leftContainer);
+        this.setCenter(centerContainer);
+
     }
 
     /**

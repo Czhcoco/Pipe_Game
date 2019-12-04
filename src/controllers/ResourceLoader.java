@@ -19,7 +19,7 @@ public class ResourceLoader {
 
     static {
         // TODO: Initialize RES_PATH
-        RES_PATH = Paths.get("/resources");
+        RES_PATH = Paths.get("/resources").toAbsolutePath();
     }
 
     /**

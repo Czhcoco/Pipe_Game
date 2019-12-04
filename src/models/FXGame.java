@@ -101,9 +101,9 @@ public class FXGame {
      */
     public FXGame(int rows, int cols, int delay, @NotNull Cell[][] cells, @Nullable List<Pipe> pipes) {
         // TODO
-        map = null;
-        pipeQueue = null;
-        flowTimer = null;
+        map = new Map(rows, cols, cells);
+        pipeQueue = new PipeQueue(pipes);
+        flowTimer = new FlowTimer();
     }
 
     /**
@@ -145,6 +145,14 @@ public class FXGame {
      */
     public void placePipe(int row, int col) {
         // TODO
+
+        Pipe p = pipeQueue.peek();
+        var coord = new Coordinate(row, col);
+        if (map.tryPlacePipe(coord, p)) {
+            pipeQueue.consume();
+            cellStack.push(new FillableCell(coord, p));
+            numOfSteps.set(numOfSteps.get() + 1);
+        }
     }
 
     /**
@@ -152,6 +160,9 @@ public class FXGame {
      */
     public void skipPipe() {
         // TODO
+
+        pipeQueue.consume();
+        numOfSteps.set(numOfSteps.get() + 1);
     }
 
     /**
@@ -159,6 +170,17 @@ public class FXGame {
      */
     public void undoStep() {
         // TODO
+
+        var undoCell = cellStack.pop();
+        if (undoCell != null) {
+            if (undoCell.getPipe().map(Pipe::getFilled).orElse(false)) {
+                cellStack.push(undoCell);
+            }
+            pipeQueue.undo(undoCell.getPipe().orElseThrow());
+            map.undo(undoCell.coord);
+
+            numOfSteps.set(numOfSteps.get() + 1);
+        }
     }
 
     /**
@@ -184,6 +206,13 @@ public class FXGame {
      */
     public void updateState() {
         // TODO
+
+        if (flowTimer.distance() == 0) {
+            map.fillBeginTile();
+            map.fillTiles(flowTimer.distance());
+        } else if (flowTimer.distance() > 0) {
+            map.fillTiles(flowTimer.distance());
+        }
     }
 
     /**
@@ -191,7 +220,7 @@ public class FXGame {
      */
     public boolean hasWon() {
         // TODO
-        return false;
+        return map.checkPath();
     }
 
     /**
@@ -199,7 +228,11 @@ public class FXGame {
      */
     public boolean hasLost() {
         // TODO
-        return false;
+        if (flowTimer.distance() <= 0) {
+            return false;
+        } else {
+            return map.hasLost();
+        }
     }
 
     /**

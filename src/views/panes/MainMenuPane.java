@@ -39,6 +39,14 @@ public class MainMenuPane extends GamePane {
     @Override
     void connectComponents() {
         // TODO
+        container.getChildren().addAll(
+                title,
+                levelSelectButton,
+                levelEditorButton,
+                settingsButton,
+                quitButton
+        );
+        this.setCenter(container);
     }
 
     /**
@@ -55,5 +63,9 @@ public class MainMenuPane extends GamePane {
     @Override
     void setCallbacks() {
         // TODO
+        levelSelectButton.setOnAction(e -> SceneManager.getInstance().showPane(LevelSelectPane.class));
+        levelEditorButton.setOnAction(e -> SceneManager.getInstance().showPane(LevelEditorPane.class));
+        settingsButton.setOnAction(e -> SceneManager.getInstance().showPane(SettingsPane.class));
+        quitButton.setOnAction(e -> Platform.exit());
     }
 }

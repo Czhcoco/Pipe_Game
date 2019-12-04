@@ -71,6 +71,10 @@ public class Renderer {
      */
     private static void drawRotatedImage(@NotNull GraphicsContext gc, @NotNull Image image, double angle, double x, double y) {
         // TODO
+        gc.save();
+        rotate(gc, angle, x + image.getWidth()/2, y + image.getHeight()/2);
+        gc.drawImage(image, x, y);
+        gc.restore();
     }
 
     /**
@@ -81,6 +85,15 @@ public class Renderer {
      */
     public static void renderMap(@NotNull Canvas canvas, @NotNull Cell[][] map) {
         // TODO
+        int row = map.length;
+        int col = map[0].length;
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        for(int i = 0; i < row; i++){
+            for(int j = 0; j < col; j++){
+                CellImage image = map[i][j].getImageRep();
+                drawRotatedImage(gc, image.image, image.rotation, j*TILE_SIZE, i*TILE_SIZE);
+            }
+        }
     }
 
     /**
@@ -91,5 +104,10 @@ public class Renderer {
      */
     public static void renderQueue(@NotNull Canvas canvas, @NotNull List<Pipe> pipeQueue) {
         // TODO
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        for(int i = 0; i < pipeQueue.size(); i++){
+            CellImage image = pipeQueue.get(i).getImageRep();
+            drawRotatedImage(gc, image.image, image.rotation, i*TILE_SIZE, 0);
+        }
     }
 }
