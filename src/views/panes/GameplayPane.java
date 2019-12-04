@@ -231,6 +231,7 @@ public class GameplayPane extends GamePane {
                     SceneManager.getInstance().showPane(LevelSelectPane.class);
                 }
             } else {
+                manager.setLevel("<generate>");
                 FXGame newFXGame = new FXGame();
                 startGame(newFXGame);
             }
