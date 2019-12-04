@@ -4,6 +4,7 @@ import controllers.LevelManager;
 import controllers.Renderer;
 import controllers.SceneManager;
 import io.Deserializer;
+import io.GameProperties;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ListView;
@@ -130,7 +131,7 @@ public class LevelSelectPane extends GamePane {
         manager.setLevel(newValue);
         String path = manager.getCurrentLevelPath().toString();
         try {
-            var gp = new Deserializer(path).parseGameFile();
+            GameProperties gp = new Deserializer(path).parseGameFile();
             Renderer.renderMap(levelPreview, gp.cells);
         } catch (FileNotFoundException e) {
             e.printStackTrace();

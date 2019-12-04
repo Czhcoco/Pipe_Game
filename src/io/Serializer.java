@@ -31,7 +31,7 @@ public class Serializer {
      */
     public void serializeGameProp(@NotNull final GameProperties prop) throws IOException {
         // TODO
-        PrintWriter b = new PrintWriter(path.toFile());
+        PrintWriter b = new PrintWriter(path.toString());
 
         b.print("# rows");
         b.println();
@@ -50,24 +50,14 @@ public class Serializer {
 
         b.print("# map");
         b.println();
-        for (var row: prop.cells){
-            for (var item: row){
-                b.print(item.toSingleChar());
+        for(int i = 0; i < prop.cells.length; i++){
+            for(int j = 0; j < prop.cells[0].length; j++){
+                b.print(prop.cells[i][j].toSerializedRep());
             }
             b.println();
         }
 
+        b.flush();
 
-//        b.newLine();
-//        b.write("# optional: list of pipes to start with");
-//        b.newLine();
-//        b.write("# TR: Top-Right, TL: Top-Left, BL: Bottom-Left, BR: Bottom-Right, CR: Cross");
-//        b.newLine();
-//        for(int i = 0; i < prop.pipes.size(); i++){
-//            b.write(prop.pipes.get(i).toString());
-//            if(i != prop.pipes.size()-1)
-//                b.write(", ");
-//        }
-//        b.newLine();
     }
 }

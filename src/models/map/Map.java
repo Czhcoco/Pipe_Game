@@ -438,11 +438,9 @@ public class Map {
      */
     public void fillAll() {
         // TODO
-        int distance = 0;
-        while(!sinkCell.isFilled()){
-            fillTiles(distance);
-            distance++;
-        }
+        fillBeginTile();
+        fillTiles(rows * cols);
+        sinkCell.setFilled();
     }
 
     /**

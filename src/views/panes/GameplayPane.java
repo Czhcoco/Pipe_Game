@@ -128,12 +128,12 @@ public class GameplayPane extends GamePane {
         AudioManager audio = AudioManager.getInstance();
 
         if (audio.isEnabled()) {
-            audio.playSound("MOVE");
+            audio.playSound(AudioManager.SoundRes.MOVE);
         }
 
         if (game.hasWon()) {
             if (audio.isEnabled()) {
-                audio.playSound("WIN");
+                audio.playSound(AudioManager.SoundRes.WIN);
             }
             endGame();
             createWinPopup();
@@ -212,21 +212,26 @@ public class GameplayPane extends GamePane {
         // TODO
         endGame();
         LevelManager manager = LevelManager.getInstance();
-        String nextLevel = manager.getAndSetNextLevel();
-        if (nextLevel != null) {
-            try {
-                Deserializer des = new Deserializer(manager.getCurrentLevelPath());
-                startGame(des.parseFXGame());
-            } catch (FileNotFoundException e) {
-                Alert box = new Alert(Alert.AlertType.WARNING);
-                box.setHeaderText("Cannot open next map");
-                box.setContentText("You will be returned to the Level Select Menu.");
-                box.showAndWait();
-                SceneManager.getInstance().showPane(LevelSelectPane.class);
-            }
-        } else {
+        if (manager.getCurrentLevelProperty().getName().isEmpty()) {
             FXGame newFXGame = new FXGame();
             startGame(newFXGame);
+        } else {
+            String nextLevel = manager.getAndSetNextLevel();
+            if (nextLevel != null) {
+                try {
+                    Deserializer des = new Deserializer(manager.getCurrentLevelPath());
+                    startGame(des.parseFXGame());
+                } catch (FileNotFoundException e) {
+                    Alert box = new Alert(Alert.AlertType.WARNING);
+                    box.setHeaderText("Cannot open next map");
+                    box.setContentText("You will be returned to the Level Select Menu.");
+                    box.showAndWait();
+                    SceneManager.getInstance().showPane(LevelSelectPane.class);
+                }
+            } else {
+                FXGame newFXGame = new FXGame();
+                startGame(newFXGame);
+            }
         }
     }
 
@@ -311,7 +316,7 @@ public class GameplayPane extends GamePane {
                     game.updateState();
                     if (game.hasLost()) {
                         if (audio.isEnabled()) {
-                            audio.playSound("LOSE");
+                            audio.playSound(AudioManager.SoundRes.LOSE);
                         }
                         endGame();
                         createLosePopup();

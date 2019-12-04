@@ -25,6 +25,7 @@ public class Wall extends Cell {
     @Override
     public char toSingleChar() {
         return PipePatterns.WALL;
+//        return toSerializedRep();
     }
 
     @NotNull

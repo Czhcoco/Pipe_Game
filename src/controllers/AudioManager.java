@@ -71,13 +71,13 @@ public class AudioManager {
         if (this.isEnabled()){
                 var media = new MediaPlayer(new Media(ResourceLoader.getResource("assets/audio/" + name + ".mp3")));
                 soundPool.add(media);
-
                 media.play();
 
                 media.setOnEndOfMedia(() -> {
                     soundPool.remove(media);
                     media.dispose();
                 });
+
         }
     }
 
@@ -86,7 +86,7 @@ public class AudioManager {
      *
      * @param name Enumeration of the sound, given by {@link SoundRes}.
      */
-    public void playSound(final String name) {
+    public void playSound(final SoundRes name) {
         playFile(name.toString());
     }
 }

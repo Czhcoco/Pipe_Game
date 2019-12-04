@@ -215,9 +215,9 @@ public class FXGame {
         } else if (flowTimer.distance() > 0) {
             map.fillTiles(flowTimer.distance());
         }
-//        if (hasWon()) {
-//            fillAllPipes();
-//        }
+        if (hasWon()) {
+            fillAllPipes();
+        }
     }
 
     /**

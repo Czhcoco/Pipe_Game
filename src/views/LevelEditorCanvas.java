@@ -172,23 +172,25 @@ public class LevelEditorCanvas extends Canvas {
         // TODO
         for(int i = 1; i < gameProp.rows - 1; i++){
             for(int j = 1; j < gameProp.cols - 1; j++){
-                if(gameProp.cells[i][j] instanceof TerminationCell) {
-                    Direction old = ((TerminationCell)gameProp.cells[i][j]).pointingTo;
-                    Direction now = null;
-                    switch (old){
-                        case UP:
-                            now = Direction.RIGHT; break;
-                        case RIGHT:
-                            now = Direction.DOWN; break;
-                        case DOWN:
-                            now = Direction.LEFT; break;
-                        case LEFT:
-                            now = Direction.UP; break;
+                if(gameProp.cells[i][j] instanceof TerminationCell)
+                    if (((TerminationCell) gameProp.cells[i][j]).type == TerminationCell.Type.SOURCE) {
+                        Direction old = ((TerminationCell)gameProp.cells[i][j]).pointingTo;
+                        Direction now = null;
+                        switch (old){
+                            case UP:
+                                now = Direction.RIGHT; break;
+                            case RIGHT:
+                                now = Direction.DOWN; break;
+                            case DOWN:
+                                now = Direction.LEFT; break;
+                            case LEFT:
+                                now = Direction.UP; break;
+                        }
+                        gameProp.cells[i][j] = new TerminationCell(new Coordinate(i, j), now, TerminationCell.Type.SOURCE);
                     }
-                    gameProp.cells[i][j] = new TerminationCell(new Coordinate(i, j), now, TerminationCell.Type.SOURCE);
-                }
             }
         }
+        renderCanvas();
     }
 
     /**
@@ -244,15 +246,30 @@ public class LevelEditorCanvas extends Canvas {
     private boolean loadFromFile(@NotNull Path path) {
         // TODO
         try {
-            Deserializer des = new Deserializer(path);
-            gameProp = des.parseGameFile();
-            return true;
+            gameProp = new Deserializer(path).parseGameFile();
+            this.setHeight(gameProp.rows * TILE_SIZE);
+            this.setWidth(gameProp.cols * TILE_SIZE);
+            this.getGraphicsContext2D().clearRect(0,0, gameProp.cols * TILE_SIZE, gameProp.rows * TILE_SIZE);
+            renderCanvas();
+
+            for (int i = 0; i < gameProp.rows; i++) {
+                for (int j = 0; j < gameProp.cols; j++) {
+                    if (gameProp.cells[i][j] instanceof TerminationCell) {
+                        if (((TerminationCell) gameProp.cells[i][j]).type == TerminationCell.Type.SOURCE)
+                            sourceCell = (TerminationCell) gameProp.cells[i][j];
+                        if (((TerminationCell) gameProp.cells[i][j]).type == TerminationCell.Type.SINK)
+                            sourceCell = (TerminationCell) gameProp.cells[i][j];
+                    }
+                }
+            }
         } catch (InvalidMapException e) {
             return false;
         }
         catch (FileNotFoundException e){
+            e.printStackTrace();
             return false;
         }
+        return true;
     }
 
     /**

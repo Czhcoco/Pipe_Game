@@ -9,7 +9,7 @@ public final class PipePatterns {
         // You don't need to instantiate this class to use it!
     }
 
-    public static final char WALL = '\u2588';
+    public static final char WALL = 'W';
 
     public static class Filled {
         public static final char UP_ARROW = '\u25B2';
