@@ -33,11 +33,13 @@ public class FXGame {
     @NotNull
     private final PipeQueue pipeQueue;
     @NotNull
-    private final FlowTimer flowTimer;
+    private FlowTimer flowTimer;
     @NotNull
     private final CellStack cellStack = new CellStack();
 
     private IntegerProperty numOfSteps = new SimpleIntegerProperty(0);
+
+    private int pauseDistance;
 
     /**
      * Sets the default number of rows for generated maps.
@@ -131,6 +133,16 @@ public class FXGame {
      */
     public void startCountdown() {
         flowTimer.start();
+    }
+
+    public void reset() {
+        flowTimer.restart(pauseDistance);
+    }
+
+    public void pause() {
+        pauseDistance = flowTimer.distance();
+        flowTimer.stop();
+        flowTimer = new FlowTimer();
     }
 
     /**

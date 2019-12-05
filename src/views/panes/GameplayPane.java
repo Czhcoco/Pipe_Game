@@ -45,6 +45,7 @@ public class GameplayPane extends GamePane {
     private FXGame game;
 
     private final IntegerProperty ticksElapsed = new SimpleIntegerProperty();
+    private final IntegerProperty pause = new SimpleIntegerProperty();
     private GameplayInfoPane infoPane = null;
 
     public GameplayPane() {
@@ -107,9 +108,44 @@ public class GameplayPane extends GamePane {
     void setCallbacks() {
         // TODO
         quitToMenuButton.setOnAction(e -> doQuitToMenuAction());
-
         gameplayCanvas.setOnMouseClicked(e -> onCanvasClicked(e));
         this.setOnKeyPressed(e -> onKeyPressed(e));
+        resumeButton.setOnAction(e -> {
+            if (resumeButton.getText().equals("Pause")) {
+                resumeButton.setText("Resume");
+                game.pause();
+            } else {
+                resumeButton.setText("Pause");
+                game.addOnTickHandler(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Platform.runLater(() -> {
+                            ticksElapsed.set(ticksElapsed.get() + 1);
+                            game.updateState();
+                            game.renderMap(gameplayCanvas);
+                            game.renderQueue(queueCanvas);
+                        });
+                    }
+                });
+                game.addOnFlowHandler(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Platform.runLater(() -> {
+                            AudioManager audio = AudioManager.getInstance();
+                            game.updateState();
+                            if (game.hasLost()) {
+                                if (audio.isEnabled()) {
+                                    audio.playSound(AudioManager.SoundRes.LOSE);
+                                }
+                                endGame();
+                                createLosePopup();
+                            }
+                        });
+                    }
+                });
+                game.reset();
+            }
+        });
     }
 
     /**
@@ -300,6 +336,7 @@ public class GameplayPane extends GamePane {
         this.game = game;
         game.renderMap(gameplayCanvas);
         game.renderQueue(queueCanvas);
+        resumeButton.setText("Pause");
         infoPane.bindTo(LevelManager.getInstance().getCurrentLevelProperty(), ticksElapsed, game.getNumOfSteps(), game.getNumOfUndo());
 
         game.addOnTickHandler(new TimerTask() {
@@ -328,24 +365,6 @@ public class GameplayPane extends GamePane {
                     }
                 });
             }
-        });
-
-        resumeButton.setOnAction(e -> {
-            if (resumeButton.getText().equals("Pause")) {
-                resumeButton.setText("Resume");
-                game.addOnTickHandler(new TimerTask() {
-                    @Override
-                    public void run() {
-                        Platform.runLater(() -> {
-                            ticksElapsed.set(ticksElapsed.get() - 1);
-//                            game.updateState();
-//                            game.renderMap(gameplayCanvas);
-//                            game.renderQueue(queueCanvas);
-                        });
-                    }
-                });
-            } else
-                resumeButton.setText("Pause");
         });
 
         game.startCountdown();

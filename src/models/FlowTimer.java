@@ -109,7 +109,7 @@ public class FlowTimer {
             public void run() {
                 Platform.runLater(()-> {
                     currentValue.set(currentValue.get() + 1);
-//                    System.out.println(currentValue.getValue());
+                    System.out.println(currentValue.getValue());
                 });
             }
         });
@@ -154,6 +154,7 @@ public class FlowTimer {
     void start() {
         // TODO
         onTickCallbacks.forEach((t) -> {
+            System.out.println("tick");
             flowTimer.scheduleAtFixedRate((TimerTask) t, 1000, 1000);
         });
 
@@ -169,6 +170,17 @@ public class FlowTimer {
 //                        currentValue.set(currentValue.get() + 1);
 //            }
 //        }, 1000, 1000);
+    }
+
+    void restart(int restartDistance) {
+        currentValue.set(restartDistance);
+        onTickCallbacks.forEach((t) -> {
+            flowTimer.scheduleAtFixedRate((TimerTask) t, 1000, 1000);
+        });
+
+        onFlowCallbacks.forEach((t) -> {
+            flowTimer.scheduleAtFixedRate((TimerTask) t, 0, 1000 * defaultFlowDuration);
+        });
     }
 
     /**
